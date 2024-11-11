@@ -1,43 +1,67 @@
 // src/pages/Habits.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import HabitTracker from '../components/HabitTracker';
 
-const defaultHabits = [
-  {
-    name: "Exercise",
-    dates: Array(365).fill(0), // Initialize with 365 days, not completed (0)
-  },
-];
-
 function Habits() {
-  const [habits, setHabits] = useState(() => {
-    const savedHabits = localStorage.getItem("habits");
-    return savedHabits ? JSON.parse(savedHabits) : defaultHabits;
-  });
+  const [habits, setHabits] = useState([]);
+  const [newHabit, setNewHabit] = useState("")
 
+  // Fetch habits from the backend on component mount
   useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
-  }, [habits]);
+    fetchHabits();
+  },[]);
 
-  const addHabit = (name) => {
-    setHabits([...habits, { name, dates: Array(365).fill(0) }]);
+    const fetchHabits = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/habits'); // Replace with your API endpoint
+        setHabits(response.data);
+      } catch (error) {
+        console.error("Error fetching habits:", error);
+      }
+    };
+
+
+  // Add a new habit
+  const addHabit = async (name) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/new-habit', { title: name });
+      setHabits((prevHabits) => [...prevHabits, response.data]);
+      console.log("Habit added:", response.data);  // Debugging output
+    } catch (error) {
+      console.error("Error adding habit:", error);
+    }
   };
 
-  const deleteHabit = (index) => {
-    setHabits(habits.filter((_, i) => i !== index));
+  // Toggle a day for a specific habit and update in the backend
+  const toggleDay = async (habitIndex, dayOfYear) => {
+    const updatedHabits = habits.map((habit, i) => {
+      if (i === habitIndex) {
+        const updatedDates = [...habit.dates];
+        updatedDates[dayOfYear] = updatedDates[dayOfYear] === 1 ? 0 : 1;
+        return { ...habit, dates: updatedDates };
+      }
+      return habit;
+    });
+    setHabits(updatedHabits);
+
+    try {
+      const habit = updatedHabits[habitIndex];
+      await axios.put(`http://127.0.0.1:5000/habits/${habit.id}`, { dates: habit.dates });
+    } catch (error) {
+      console.error("Error updating habit:", error);
+    }
   };
 
-  const toggleDay = (habitIndex, dayOfYear) => {
-    setHabits((prevHabits) =>
-      prevHabits.map((habit, i) => {
-        if (i === habitIndex) {
-          const updatedDates = [...habit.dates];
-          updatedDates[dayOfYear] = updatedDates[dayOfYear] === 1 ? 0 : 1;
-          return { ...habit, dates: updatedDates };
-        }
-        return habit;
-      })
-    );
+  // Delete a habit
+  const deleteHabit = async (index) => {
+    const habit = habits[index];
+    try {
+      await axios.delete(`http://127.0.0.1:5000/habits/${habit.id}`);
+      setHabits(habits.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting habit:", error);
+    }
   };
 
   return (

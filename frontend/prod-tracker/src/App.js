@@ -10,8 +10,6 @@ function App() {
         <Router>
             <div>
                 <NavBar/>
-                <h1>Welcome to Prod</h1>
-
                 <Routes>
                     <Route path="/tasks" element={<Tasks/>}/>
                     <Route path="/Habits" element={<Habits/>}/>

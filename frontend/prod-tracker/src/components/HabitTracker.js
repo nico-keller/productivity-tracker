@@ -5,12 +5,13 @@ import './HabitTracker.css';
 function HabitTracker({ habit, habitIndex, toggleDay }) {
   // Define month names and the start of the year
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const yearStart = new Date(new Date().getFullYear(), 0, 1);
 
   return (
     <div className="habit-tracker">
-      <h2>{habit.name}</h2> {/* Habit title */}
+      {/* Display habit title here as well, if needed */}
+      <h2>{habit.title}</h2>
       <div className="graph">
         <ul className="months">
           {months.map((month, index) => (
@@ -32,7 +33,7 @@ function HabitTracker({ habit, habitIndex, toggleDay }) {
                 key={dayOfYear}
                 className={`day-square ${completed ? 'completed' : 'not-completed'}`}
                 onClick={() => toggleDay(habitIndex, dayOfYear)}
-                title={date.toDateString()} // Tooltip with date
+                title={date.toDateString()}
               />
             );
           })}

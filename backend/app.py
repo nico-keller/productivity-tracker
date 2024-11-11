@@ -2,7 +2,6 @@
 from flask import Flask
 from routes import configure_routes
 from database import init_db, db
-from models import Task
 from flask_cors import CORS
 from flask_migrate import Migrate
 
