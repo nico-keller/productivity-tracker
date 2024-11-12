@@ -18,13 +18,14 @@ def fetch_news():
         sivar_articles = newsapi.get_everything(q='El Salvador, Central America', language='en', sort_by='relevancy', page=1)
         madrid_articles = newsapi.get_everything(q='Real Madrid', language='en', sort_by='relevancy', page=1)
         munich_articles = newsapi.get_everything(q='Bayern Munich', language='en', sort_by='relevancy', page=1)
+        cs_articles = newsapi.get_everything(q='Computer Science', sort_by='relevancy', language='en', page=1)
 
         # Structure the data for easy access in the frontend
         news_data = {
             "El Salvador": sivar_articles['articles'],
             "Bayern München": munich_articles['articles'],
-            "Real Madrid": madrid_articles['articles']
-
+            "Real Madrid": madrid_articles['articles'],
+            "Computer Science": cs_articles['articles']
         }
         return news_data
     except Exception as e:
