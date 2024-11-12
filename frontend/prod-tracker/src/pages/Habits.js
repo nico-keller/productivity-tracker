@@ -5,7 +5,6 @@ import HabitTracker from '../components/HabitTracker';
 
 function Habits() {
   const [habits, setHabits] = useState([]);
-  const [newHabit, setNewHabit] = useState("")
 
   // Fetch habits from the backend on component mount
   useEffect(() => {

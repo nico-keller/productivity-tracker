@@ -3,6 +3,8 @@ from flask import request, jsonify
 from models import Task, Habit
 from database import db
 import json
+from news import fetch_news
+
 
 def configure_routes(app):
     @app.route('/', methods=['GET'])
@@ -81,3 +83,10 @@ def configure_routes(app):
         db.session.commit()
         return '', 204
 
+    @app.route('/news', methods=['GET'])
+    def get_news():
+        news_data = fetch_news()  # Fetch the news data from news.py
+        if news_data is not None:
+            return jsonify(news_data), 200
+        else:
+            return jsonify({"error": "Failed to fetch news"}), 500
