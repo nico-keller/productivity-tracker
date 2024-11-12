@@ -4,6 +4,7 @@ from models import Task, Habit
 from database import db
 import json
 from news import fetch_news
+from football import fetch_fixtures
 
 
 def configure_routes(app):
@@ -90,3 +91,18 @@ def configure_routes(app):
             return jsonify(news_data), 200
         else:
             return jsonify({"error": "Failed to fetch news"}), 500
+
+    @app.route('/matches', methods=['GET'])
+    def get_matches():
+        try:
+            real_madrid_matches = fetch_fixtures("Real Madrid")
+            bayern_munich_matches = fetch_fixtures("Bayern Munich")
+
+            match_data = {
+                "Real Madrid": real_madrid_matches,
+                "Bayern Munich": bayern_munich_matches
+            }
+            return jsonify(match_data), 200
+        except Exception as e:
+            print("Error fetching matches:", str(e))
+            return jsonify({"error": "Failed to fetch matches"}), 500

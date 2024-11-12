@@ -1,0 +1,30 @@
+.match-feed {
+  padding: 20px;
+}
+
+.team-matches {
+  margin-bottom: 40px;
+}
+
+.match-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+}
+
+.match-box {
+  min-width: 150px;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.match-box p {
+  margin: 5px 0;
+}
+
+.match-box.upcoming {
+  background-color: #e0f7fa;
+}
