@@ -2,52 +2,104 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './WeatherFeed.css';
 
-// Mapping weather codes to icons based on Tomorrow.io weather codes
-const weatherIcons = {
-  "1000": "☀️",         // Clear
-  "1100": "🌤",         // Mostly Clear
-  "1101": "⛅",         // Partly Cloudy
-  "1102": "☁️",         // Mostly Cloudy
-  "1001": "☁️",         // Cloudy
-  "2000": "🌫️",         // Fog
-  "2100": "🌁",         // Light Fog
-  "4000": "🌧️",         // Drizzle
-  "4001": "🌧️",         // Rain
-  "4200": "🌦️",         // Light Rain
-  "4201": "🌧️",         // Heavy Rain
-  "5000": "❄️",         // Snow
-  "5001": "❄️",         // Flurries
-  "5100": "🌨️",         // Light Snow
-  "5101": "❄️",         // Heavy Snow
-  "6000": "🌧️",         // Freezing Drizzle
-  "6001": "🌧️",         // Freezing Rain
-  "6200": "🌧️",         // Light Freezing Rain
-  "6201": "🌧️",         // Heavy Freezing Rain
-  "7000": "🌩️",         // Ice Pellets
-  "7101": "🌩️",         // Heavy Ice Pellets
-  "7102": "🌩️",         // Light Ice Pellets
-  "8000": "⛈️"          // Thunderstorm
+// Weather code mapping constants
+const WEATHER_CODES = {
+  CLEAR: "1000",
+  MOSTLY_CLEAR: "1100",
+  PARTLY_CLOUDY: "1101",
+  MOSTLY_CLOUDY: "1102",
+  CLOUDY: "1001",
+  FOG: "2000",
+  LIGHT_FOG: "2100",
+  DRIZZLE: "4000",
+  RAIN: "4001",
+  LIGHT_RAIN: "4200",
+  HEAVY_RAIN: "4201",
+  SNOW: "5000",
+  FLURRIES: "5001",
+  LIGHT_SNOW: "5100",
+  HEAVY_SNOW: "5101",
+  FREEZING_DRIZZLE: "6000",
+  FREEZING_RAIN: "6001",
+  LIGHT_FREEZING_RAIN: "6200",
+  HEAVY_FREEZING_RAIN: "6201",
+  ICE_PELLETS: "7000",
+  HEAVY_ICE_PELLETS: "7101",
+  LIGHT_ICE_PELLETS: "7102",
+  THUNDERSTORM: "8000"
 };
 
-function getWeatherIcon(code) {
-  // Map `weatherCode` values to emojis/icons
-  return weatherIcons[code] || "☀️"; // Default to sun if no match is found
-}
+const weatherIcons = {
+  [WEATHER_CODES.CLEAR]: "☀️",
+  [WEATHER_CODES.MOSTLY_CLEAR]: "🌤",
+  [WEATHER_CODES.PARTLY_CLOUDY]: "⛅",
+  [WEATHER_CODES.MOSTLY_CLOUDY]: "☁️",
+  [WEATHER_CODES.CLOUDY]: "☁️",
+  [WEATHER_CODES.FOG]: "🌫️",
+  [WEATHER_CODES.LIGHT_FOG]: "🌁",
+  [WEATHER_CODES.DRIZZLE]: "🌧️",
+  [WEATHER_CODES.RAIN]: "🌧️",
+  [WEATHER_CODES.LIGHT_RAIN]: "🌦️",
+  [WEATHER_CODES.HEAVY_RAIN]: "🌧️",
+  [WEATHER_CODES.SNOW]: "❄️",
+  [WEATHER_CODES.FLURRIES]: "❄️",
+  [WEATHER_CODES.LIGHT_SNOW]: "🌨️",
+  [WEATHER_CODES.HEAVY_SNOW]: "❄️",
+  [WEATHER_CODES.FREEZING_DRIZZLE]: "🌧️",
+  [WEATHER_CODES.FREEZING_RAIN]: "🌧️",
+  [WEATHER_CODES.LIGHT_FREEZING_RAIN]: "🌧️",
+  [WEATHER_CODES.HEAVY_FREEZING_RAIN]: "🌧️",
+  [WEATHER_CODES.ICE_PELLETS]: "🌩️",
+  [WEATHER_CODES.HEAVY_ICE_PELLETS]: "🌩️",
+  [WEATHER_CODES.LIGHT_ICE_PELLETS]: "🌩️",
+  [WEATHER_CODES.THUNDERSTORM]: "⛈️"
+};
+
+const getWeatherIcon = (code) => weatherIcons[code] || "☀️";
+
+const WeatherForecastItem = ({ interval }) => {
+  const { startTime, values } = interval;
+  const { weatherCode, temperatureMax, temperatureMin, windSpeed, precipitationIntensity } = values;
+
+  return (
+    <div className="daily-forecast-item">
+      <p><strong>{new Date(startTime).toLocaleDateString()}</strong></p>
+      <div className="weather-icon">{getWeatherIcon(weatherCode)}</div>
+      <p>Max: {temperatureMax} °C</p>
+      <p>Min: {temperatureMin} °C</p>
+      <p>Wind: {windSpeed} km/h</p>
+      <p>Precipitation: {precipitationIntensity} mm/hr</p>
+    </div>
+  );
+};
 
 function WeatherFeed() {
   const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:5000/weather');
         setWeather(response.data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching weather data:", error);
+        setError("Failed to load weather data. Please try again later.");
       }
     };
+
     fetchWeather();
+
+    // Refresh weather data every 30 minutes
+    const intervalId = setInterval(fetchWeather, 30 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
+
+  if (error) {
+    return <div className="weather-feed error">{error}</div>;
+  }
 
   return (
     <div className="weather-feed">
@@ -55,14 +107,7 @@ function WeatherFeed() {
       {weather ? (
         <div className="daily-forecast">
           {weather.data.timelines[0].intervals.map((interval, index) => (
-            <div key={index} className="daily-forecast-item">
-              <p><strong>{new Date(interval.startTime).toLocaleDateString()}</strong></p>
-              <div className="weather-icon">{getWeatherIcon(interval.values.weatherCode)}</div>
-              <p>Max: {interval.values.temperatureMax} °C</p>
-              <p>Min: {interval.values.temperatureMin} °C</p>
-              <p>Wind: {interval.values.windSpeed} km/h</p>
-              <p>Precipitation: {interval.values.precipitationIntensity} mm/hr</p>
-            </div>
+            <WeatherForecastItem key={index} interval={interval} />
           ))}
         </div>
       ) : (
