@@ -5,6 +5,7 @@ import NewsFeed from "./components/NewsFeed";
 import MatchFeed from "./components/MatchFeed";
 import Tasks from './pages/Tasks';
 import Habits from "./pages/Habits";
+import Weather from "./pages/Weather";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                     }/>
                     <Route path="/tasks" element={<Tasks/>}/>
                     <Route path="/habits" element={<Habits/>}/>
+                    <Route path="/weather" element={<Weather/>}/>
                 </Routes>
             </div>
         </Router>

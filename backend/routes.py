@@ -5,6 +5,7 @@ from database import db
 import json
 from news import fetch_news
 from football import fetch_fixtures
+from weather import fetch_weather_forecast
 
 
 def configure_routes(app):
@@ -106,3 +107,14 @@ def configure_routes(app):
         except Exception as e:
             print("Error fetching matches:", str(e))
             return jsonify({"error": "Failed to fetch matches"}), 500
+
+
+    @app.route('/weather', methods=['GET'])
+    def get_weather():
+        latitude_sg = request.args.get("lat", default=47.43403139791966, type=float)
+        longitude_sg = request.args.get("lon", default=9.38076210631152, type=float)
+        weather_data = fetch_weather_forecast(latitude_sg, longitude_sg)
+        if weather_data:
+            return jsonify(weather_data), 200
+        else:
+            return jsonify({"error": "Failed to fetch weather data"}), 500

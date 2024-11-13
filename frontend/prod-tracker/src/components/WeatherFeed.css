@@ -1,0 +1,44 @@
+.weather-feed {
+  padding: 20px;
+  text-align: center;
+}
+
+.daily-forecast {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.daily-forecast-item {
+  min-width: 140px;
+  background-color: #f0f8ff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.daily-forecast-item:hover {
+  transform: scale(1.05);
+  background-color: #e6f7ff;
+}
+
+.daily-forecast-item p {
+  margin: 5px 0;
+}
+
+.weather-icon {
+  font-size: 2.5em;
+  margin: 10px 0;
+}
+
+.daily-forecast-item p {
+  color: #333;
+  font-weight: 500;
+}
+
+.daily-forecast-item p strong {
+  color: #000;
+}

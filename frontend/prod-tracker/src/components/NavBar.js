@@ -11,7 +11,7 @@ function NavBar() {
         <li><a href="/">Home</a></li>
         <li><a href="/tasks">Tasks</a></li>
         <li><a href="/habits">Habits</a></li>
-        <li><a href="#weather">Weather</a></li>
+        <li><a href="/weather">Weather</a></li>
       </ul>
     </nav>
   );
