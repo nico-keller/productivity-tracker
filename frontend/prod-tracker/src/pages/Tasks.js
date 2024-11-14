@@ -1,7 +1,7 @@
 // src/pages/Tasks.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import './Tasks.css';
 
 function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -21,6 +21,7 @@ function Tasks() {
   };
 
   const addTask = async () => {
+    if (!newTask.trim()) return;
     try {
       const response = await axios.post('http://127.0.0.1:5000/new-task', { title: newTask });
       setTasks([...tasks, response.data]);
@@ -28,6 +29,10 @@ function Tasks() {
     } catch (error) {
       console.error("Error adding task:", error);
     }
+  };
+
+  const handleEnterKey = (e) => {
+    if (e.key === 'Enter') addTask();
   };
 
   const updateTask = async (task) => {
@@ -50,27 +55,30 @@ function Tasks() {
       console.error("Error deleting task:", error);
     }
   };
-    return (
-    <div>
 
+  return (
+    <div className="task-tracker">
       <h1>Task Tracker</h1>
-      <input
-        type="text"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-        placeholder="New Task"
-      />
-      <button onClick={addTask}>Add Task</button>
-      <ul>
+      <div className="input-container">
+        <input
+          type="text"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          placeholder="New Task"
+          onKeyDown={handleEnterKey}
+        />
+        <button onClick={addTask}>Add Task</button>
+      </div>
+      <ul className="task-list">
         {tasks.map((task) => (
-          <li key={task.id}>
+          <li key={task.id} className="task-item">
             <span
               style={{ textDecoration: task.completed ? 'line-through' : 'none', cursor: 'pointer' }}
               onClick={() => updateTask(task)}
             >
               {task.title}
             </span>
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
+            <button className="delete-button" onClick={() => deleteTask(task.id)}>Delete</button>
           </li>
         ))}
       </ul>
