@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/nico-keller/productivity-tracker/static/css/main.520dbadf.css",
+    "main.js": "/nico-keller/productivity-tracker/static/js/main.0a79c46d.js",
+    "static/media/slick.svg": "/nico-keller/productivity-tracker/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/nico-keller/productivity-tracker/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/nico-keller/productivity-tracker/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/nico-keller/productivity-tracker/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/nico-keller/productivity-tracker/index.html",
+    "main.520dbadf.css.map": "/nico-keller/productivity-tracker/static/css/main.520dbadf.css.map",
+    "main.0a79c46d.js.map": "/nico-keller/productivity-tracker/static/js/main.0a79c46d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.520dbadf.css",
+    "static/js/main.0a79c46d.js"
+  ]
+}
